@@ -73,10 +73,31 @@ contract WarGame is VRFConsumerBaseV2 {
     uint256 number;
     uint256 constant NUMBER_OF_DECKS = 1;
     uint8[13] cardValues = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10];
-    mapping(address => Game) games;
+    // mapping(address => Game) games;
+    string[52] cards = [
+        "S-2", "H-2", "C-2", "D-2",
+        "S-3", "H-3", "C-3", "D-3",
+        "S-4", "H-4", "C-4", "D-4",
+        "S-5", "H-5", "C-5", "D-5",
+        "S-6", "H-6", "C-6", "D-6",
+        "S-7", "H-7", "C-7", "D-7",
+        "S-8", "H-8", "C-8", "D-8",
+        "S-9", "H-9", "C-9", "D-9",
+        "S-10", "H-10", "C-10", "D-10",
+        "S-J", "H-J", "C-J", "D-J",
+        "S-Q", "H-Q", "C-Q", "D-Q",
+        "S-K", "H-K", "C-K", "D-K",
+        "S-A", "H-A", "C-A", "D-A"
+    ];
 
-    function askRandomCard() {
-        
+    function askRandomCard() external pure returns (uint) {
+        return 1;
     }
 
+    // todo 
+    // shuffle deck before game start
+    // function suffleDeck(){}
+    function getNthCard(uint8 n) external view returns (string memory) {
+        return cards[n];
+    }
 }
