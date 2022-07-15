@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // An example of a consumer contract that relies on a subscription for funding.
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.7;
 
 // import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -30,6 +30,7 @@ contract Card3Storage is ERC1155, Ownable, Pausable {
     ];
     uint256[] public cardQuantity;
     uint256[] public cardsIds;
+    string private __uri;
 
     constructor() ERC1155("") {
         for (uint i=0;i<cards.length;i++){
@@ -41,7 +42,7 @@ contract Card3Storage is ERC1155, Ownable, Pausable {
 
     function mint(uint id, uint amount) external payable whenNotPaused {
         _mint(msg.sender, id, amount, "");
-        cardQuantity[id]++;
+        // cardQuantity[id] = cardQuantity[id] + amount;
     }
 
     function mintBehalf(address to, uint id, uint amount) external payable whenNotPaused {
@@ -51,12 +52,15 @@ contract Card3Storage is ERC1155, Ownable, Pausable {
     function uri(uint256 tokenId) override public view returns (string memory) {
         return(
             string(abi.encodePacked(
-                "https://gateway.pinata.cloud/ipfs/QmUDdbnhnbYp1ycNg2skWGFZvMbYsCdQNQ1pe36MULWfXu/",
+                __uri,
                 Strings.toString(tokenId),
                 ".json"
             ))
         );
     }
 
-}
+    function setURI(string memory newuri) public payable onlyOwner {
+        __uri = newuri;
+    }
 
+}

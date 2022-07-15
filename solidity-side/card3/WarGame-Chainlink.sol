@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // An example of a consumer contract that relies on a subscription for funding.
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.7;
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -34,10 +34,9 @@ contract WarGame is VRFConsumerBaseV2 {
     uint16 requestConfirmations = 3;
     
     // Cannot exceed VRFCoordinatorV2.MAX_NUM_WORDS.
-    uint32 numWords =  1;
-
-    uint256[] public s_randomWords;
-    uint256 public s_requestId;
+    uint32 numWords =  2;
+    
+    uint256 private s_requestId;
     address s_owner;
 
     constructor() VRFConsumerBaseV2(vrfCoordinator) { // uint64 subscriptionId
@@ -47,27 +46,25 @@ contract WarGame is VRFConsumerBaseV2 {
     }
 
     // Assumes the subscription is funded sufficiently.
-    function requestRandomWords() external onlyOwner {
+    function requestRandomWords() private {
         // Will revert if subscription is not set and funded.
         s_requestId = COORDINATOR.requestRandomWords(
-        keyHash,
-        s_subscriptionId,
-        requestConfirmations,
-        callbackGasLimit,
-        numWords
+            keyHash,
+            s_subscriptionId,
+            requestConfirmations,
+            callbackGasLimit,
+            numWords
         );
     }
     
     function fulfillRandomWords(
-        uint256, /* requestId */
+        uint256 requestId, /* requestId */
         uint256[] memory randomWords
     ) internal override {
-        for (uint i = 0; i < randomWords.length; i++) {
-            console.log(randomWords[i]);
-            s_randomWords.push(randomWords[i]);
-        }
-        //s_randomWords = randomWords;
-        // s_randomWords[s_randomWords.length] = randomWords[0];
+        uint256 id = waitingApprovals[requestId];
+        games[id].playerCard = randomWords[0] % totalUniqueCards;
+        games[id].houseCard = randomWords[1] % totalUniqueCards;
+        delete waitingApprovals[requestId];
     }
 
     modifier onlyOwner() {
@@ -75,9 +72,8 @@ contract WarGame is VRFConsumerBaseV2 {
         _;
     }
 
-    // the rest is game
     using Strings for uint256;
-    string[52] cards = [
+    string[52] public cards = [
         "S-2", "H-2", "C-2", "D-2",
         "S-3", "H-3", "C-3", "D-3",
         "S-4", "H-4", "C-4", "D-4",
@@ -92,17 +88,45 @@ contract WarGame is VRFConsumerBaseV2 {
         "S-K", "H-K", "C-K", "D-K",
         "S-A", "H-A", "C-A", "D-A"
     ];
-
-    // todo 
-    // shuffle deck before game start
-    // function suffleDeck(){}
-    function getNthCard(uint8 n) external view returns (string memory) {
-        require(s_randomWords.length > n, "card does not exists or transaction still pending");
-        return cards[ s_randomWords[n] % 52 ];
+    uint8 totalUniqueCards = 52;
+    
+    struct game {
+        uint id;
+        uint playerCard;
+        uint houseCard;
+        address player;
+    }
+    game[] public games;
+    uint256 public gameCounter;
+    mapping (address => uint256[]) private prevIds;
+    mapping (uint256 => uint256) public waitingApprovals;
+      
+    // Function adding values to the mapping
+    function play() public payable {
+        requestRandomWords();
+        waitingApprovals[s_requestId] = gameCounter;
+        games.push(game({
+            id:gameCounter,
+            playerCard:0,
+            houseCard:0,
+            player: msg.sender
+        }));
+        prevIds[msg.sender].push(gameCounter);
+        gameCounter++;
     }
 
-    function howManyRandomWords() external view returns (uint) {
-        return s_randomWords.length;
+    function gamesLength() view public returns (uint256) {
+        return games.length;
     }
 
+    function getPreviousGameIds(address player) view public returns (uint256[] memory) {
+        // gives players all games
+        return prevIds[player];
+    }
+
+    function getGameHistory(uint id) view public returns (uint, uint, uint, address) {
+        game memory result =  games[id];
+        return (result.id, result.playerCard, result.houseCard, result.player);
+    }
+    
 }
