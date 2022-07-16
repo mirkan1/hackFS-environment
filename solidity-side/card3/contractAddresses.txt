@@ -1,0 +1,8 @@
+card3Storage 
+    0xd6ed28E41890869772551DB6e766cA3139b806c0
+warGame
+    0xcA603E76FBa1DF395dFeA3bAa3C0CD3cFe8459eC
+networkId
+    4
+networkName
+    rinkeby
