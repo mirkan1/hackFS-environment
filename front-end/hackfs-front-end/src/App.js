@@ -1,12 +1,12 @@
+import Button from "./Components/Components/CommonContainers/Button";
+import Navbar from "./Components/Components/Navbar";
 
 function App() {
-  return (
-    <div className="App">
-      <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    </div>
-  );
+   return (
+      <div className="App">
+         <Navbar />
+      </div>
+   );
 }
 
 export default App;
