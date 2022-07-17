@@ -9,7 +9,7 @@ import polygonLogo from "../../Assets/Images/PolygonLogo.png"
 
 const Footer_Icons = ({imgSrc="",imgAlt=""})=>{
     return <li>
-        <img src={imgSrc} alt={imgAlt} className="w-12 "/>
+        <img src={imgSrc} alt={imgAlt} className="h-12 "/>
     </li>;
 }
 
