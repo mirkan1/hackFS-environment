@@ -1,8 +1,9 @@
 import React from "react";
 import Button from "./CommonContainers/Button";
+import NavLogo from "../../Assets/Images/NavLogo.webp";
 
 const Navbar_Link_Container = ({ child = <></> }) => {
-   return <ul className="flex  items-center">{child}</ul>;
+   return <ul className="flex  items-center text-3xl">{child}</ul>;
 };
 const Navbar_Link = ({ isActive = false, linkText = "test" }) => {
    return isActive ? (
@@ -26,13 +27,13 @@ const Navbar_Link_Right_Button = ({
 
 const Navbar_Main = ({ logoText = "placeholder", child = <></> }) => {
    return (
-      <ul className="flex items-center">
-         <li className="text-5xl font-bold">{logoText}</li>
+      <ul className="flex items-center gap-x-5" >
          {child}
+         <li className="text-6xl font-bold">{logoText}</li>
       </ul>
    );
 };
-const Navbar_Main_Logo = () => {};
+const Navbar_Main_Logo = () => {return <img src={NavLogo} alt="Nav_Logo" className="w-14 opacity-50"/>};
 
 const Navbar = () => {
    return (
