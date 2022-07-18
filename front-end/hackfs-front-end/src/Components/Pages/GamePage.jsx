@@ -45,7 +45,7 @@ const GamepPageControlPanel = () => {
             <Button btnText="Reset Bet" />
          </div>
          <div>
-            <Button btnText="Replay" />
+            <Button btnText="Replay" isDisabled={true} />
          </div>
       </div>
    );

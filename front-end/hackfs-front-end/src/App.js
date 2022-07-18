@@ -4,6 +4,8 @@ import Navbar from "./Components/Components/Navbar";
 import MintPage from "./Components/Pages/MintPage";
 import HomePage from "./Components/Pages/HomePage";
 import GamePage from "./Components/Pages/GamePage";
+import WalletNotConnectedPage from "./Components/Pages/WalletNotConnectedPage";
+import PageNotFound from "./Components/Pages/PageNotFound";
 
 function App() {
    return (
@@ -12,7 +14,7 @@ function App() {
          <MainArea
             child={
                <>
-                  <GamePage />
+                  <WalletNotConnectedPage />
                </>
             }
          />
