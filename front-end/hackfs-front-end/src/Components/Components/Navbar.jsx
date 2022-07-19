@@ -1,58 +1,78 @@
 import React from "react";
 import Button from "./CommonContainers/Button";
 import NavLogo from "../../Assets/Images/NavLogo.webp";
+import { HashRouter, Link } from "react-router-dom";
+import NavigationConst from "../Pages/NavigationPages";
 
-const Navbar_Link_Container = ({ child = <></> }) => {
+const NavbarLinkContainer = ({ child = <></> }) => {
    return <ul className="flex  items-center text-3xl">{child}</ul>;
 };
-const Navbar_Link = ({ isActive = false, linkText = "test" }) => {
+const NavbarLink = ({ isActive = false, linkText = "test", linkTo = "" }) => {
    return isActive ? (
       <li className="mr-6">
-         <a className="text-blue-500 hover:text-blue-800 cursor-pointer">
+         <Link
+            className="text-blue-500 hover:text-blue-800 cursor-pointer"
+            to={"/#/" + linkTo}
+         >
             {linkText}
-         </a>
+         </Link>
       </li>
    ) : (
       <li className="mr-6">
-         <a className="text-gray-400 cursor-not-allowed">{linkText}</a>
+         <Link className="text-gray-400 " to={"/" + linkTo}>
+            {linkText}
+         </Link>
       </li>
    );
 };
-const Navbar_Link_Right_Button = ({
+const NavbarLinkRightButton = ({
    isLoggedIn = false,
    buttonText = "Connect Wallet",
 }) => {
    return <Button btnText={buttonText} isDisabled={isLoggedIn} />;
 };
 
-const Navbar_Main = ({ logoText = "placeholder", child = <></> }) => {
+const NavbarMain = ({ logoText = "placeholder", child = <></> }) => {
    return (
-      <ul className="flex items-center gap-x-5" >
+      <ul className="flex items-center gap-x-5">
          {child}
          <li className="text-6xl font-bold">{logoText}</li>
       </ul>
    );
 };
-const Navbar_Main_Logo = () => {return <img src={NavLogo} alt="Nav_Logo" className="w-14 opacity-50"/>};
+const NavbarMainLogo = () => {
+   return <img src={NavLogo} alt="Nav_Logo" className="w-14 opacity-50" />;
+};
 
 const Navbar = () => {
    return (
       <div className="flex p-3 justify-between">
-         <Navbar_Main
+         <NavbarMain
             logoText="Cards3"
             child={
                <>
-                  <Navbar_Main_Logo />
+                  <NavbarMainLogo />
                </>
             }
          />
-         <Navbar_Link_Container
+         <NavbarLinkContainer
             child={
                <>
-                  <Navbar_Link isActive={true} />
-                  <Navbar_Link />
-                  <Navbar_Link />
-                  <Navbar_Link_Right_Button />
+                  <NavbarLink
+                     isActive={true}
+                     btnText
+                     linkTo="home"
+                     linkText="HOME"
+                  />
+                  <NavbarLink
+                     linkTo={NavigationConst.GampePage}
+                     linkText="GAME"
+                  />
+                  <NavbarLink
+                     linkTo={NavigationConst.MintPage}
+                     linkText="MINT"
+                  />
+                  <NavbarLinkRightButton />
                </>
             }
          />

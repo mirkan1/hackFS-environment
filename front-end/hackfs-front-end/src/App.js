@@ -6,19 +6,12 @@ import HomePage from "./Components/Pages/HomePage";
 import GamePage from "./Components/Pages/GamePage";
 import WalletNotConnectedPage from "./Components/Pages/WalletNotConnectedPage";
 import PageNotFound from "./Components/Pages/PageNotFound";
+import AppRouter from "./Router/AppRouter";
 
 function App() {
    return (
       <div className="flex flex-col min-h-screen">
-         <Navbar />
-         <MainArea
-            child={
-               <>
-                  <WalletNotConnectedPage />
-               </>
-            }
-         />
-         <Footer />
+         <AppRouter />
       </div>
    );
 }
