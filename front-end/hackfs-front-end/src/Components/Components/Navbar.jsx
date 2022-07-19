@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "./CommonContainers/Button";
 import NavLogo from "../../Assets/Images/NavLogo.webp";
-import { HashRouter, Link } from "react-router-dom";
+import { HashRouter, Link, useLocation } from "react-router-dom";
 import NavigationConst from "../Pages/NavigationPages";
 
 const NavbarLinkContainer = ({ child = <></> }) => {
@@ -45,6 +45,7 @@ const NavbarMainLogo = () => {
 };
 
 const Navbar = () => {
+   const location = useLocation();
    return (
       <div className="flex p-3 justify-between">
          <NavbarMain
@@ -59,16 +60,22 @@ const Navbar = () => {
             child={
                <>
                   <NavbarLink
-                     isActive={true}
+                     isActive={location.pathname === NavigationConst.HomePage}
                      btnText
-                     linkTo="home"
+                     linkTo={""}
                      linkText="HOME"
                   />
                   <NavbarLink
+                     isActive={
+                        location.pathname === "/" + NavigationConst.GampePage
+                     }
                      linkTo={NavigationConst.GampePage}
                      linkText="GAME"
                   />
                   <NavbarLink
+                     isActive={
+                        location.pathname === "/" + NavigationConst.MintPage
+                     }
                      linkTo={NavigationConst.MintPage}
                      linkText="MINT"
                   />
