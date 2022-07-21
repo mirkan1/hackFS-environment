@@ -1,25 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import Footer from "./Components/Components/Footer";
+import MainArea from "./Components/Components/MainArea";
+import Navbar from "./Components/Components/Navbar";
+import MintPage from "./Components/Pages/MintPage";
+import HomePage from "./Components/Pages/HomePage";
+import GamePage from "./Components/Pages/GamePage";
+import WalletNotConnectedPage from "./Components/Pages/WalletNotConnectedPage";
+import PageNotFound from "./Components/Pages/PageNotFound";
+import AppRouter from "./Router/AppRouter";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+   return (
+      <div className="flex flex-col min-h-screen">
+         <AppRouter />
+      </div>
+   );
 }
 
 export default App;
