@@ -100,19 +100,32 @@ contract WarGame is VRFConsumerBaseV2 {
     uint256 public gameCounter;
     mapping (address => uint256[]) private prevIds;
     mapping (uint256 => uint256) public waitingApprovals;
-      
+    uint256 public constant CHIP = 55;
+    
+    // XXX  //
+    // CHIP //
+    // XXX  //
+
     // Function adding values to the mapping
-    function play() public payable {
-        requestRandomWords();
-        waitingApprovals[s_requestId] = gameCounter;
-        games.push(game({
-            id:gameCounter,
-            playerCard:0,
-            houseCard:0,
-            player: msg.sender
-        }));
-        prevIds[msg.sender].push(gameCounter);
-        gameCounter++;
+    function play(uint256 amount) public payable {
+        uint256 _bal = card3BalanceOf(msg.sender, CHIP);
+        require(_bal>=amount, "User does not have enough CHIP funds");
+        // need to whitelist me first or I need to override me as whitelist member?/?/?
+        // _safeTransferFrom(msg.sender,
+        // address to,
+        // uint256 id,
+        // uint256 amount,
+        // bytes memory data)
+        // requestRandomWords();
+        // waitingApprovals[s_requestId] = gameCounter;
+        // games.push(game({
+        //     id:gameCounter,
+        //     playerCard:0,
+        //     houseCard:0,
+        //     player: msg.sender
+        // }));
+        // prevIds[msg.sender].push(gameCounter);
+        // gameCounter++;
     }
 
     function gamesLength() view public returns (uint256) {
@@ -127,6 +140,47 @@ contract WarGame is VRFConsumerBaseV2 {
     function getGameHistory(uint id) view public returns (uint, uint, uint, address) {
         game memory result =  games[id];
         return (result.id, result.playerCard, result.houseCard, result.player);
+    }   
+    address card3StorageAddress;
+
+    function setCard3StorageAddress(address newAddr) payable public onlyOwner {
+        card3StorageAddress = newAddr;
     }
-    
+
+    function card3BalanceOf(address account, uint id) view public returns (uint256) {
+        // get balance of given id's card3Storage
+        return Card3Storage(card3StorageAddress).balanceOf(account, id);
+    }
+
+    function _mintBehalf(address to, uint256 id, uint256 amount) public payable {
+        Card3Storage(card3StorageAddress).mintBehalf(to, id, amount);
+    }
+
+    function _safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    ) public payable {
+        Card3Storage(card3StorageAddress).safeTransferFrom(
+            from,
+            to,
+            id,
+            amount,
+            data
+        );
+    }
+}
+
+interface Card3Storage {
+    function balanceOf(address account, uint256 id) external view returns (uint256);
+    function mintBehalf(address to, uint256 id, uint256 amount) external payable;
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    ) external payable;
 }
