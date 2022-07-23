@@ -1,9 +1,0 @@
-card3Storage 
-    0x643e3EC75d2645C591ad2df017bc3302312be6dF
-warGame
-    ## TODO
-    0xcA603E76FBa1DF395dFeA3bAa3C0CD3cFe8459eC
-networkId
-    4
-networkName
-    rinkeby

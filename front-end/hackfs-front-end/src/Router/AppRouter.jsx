@@ -9,7 +9,10 @@ import MintPage from "../Components/Pages/MintPage";
 import NavigationConst from "../Components/Pages/NavigationPages";
 import PageNotFound from "../Components/Pages/PageNotFound";
 import WalletNotConnectedPage from "../Components/Pages/WalletNotConnectedPage";
+import { useSelector } from 'react-redux';
+
 function AppRouter({ isWalletConnected = false }) {
+   const address = useSelector((state) => state.web3Reducers.address);   
    return (
       <HashRouter>
          <Routes>
@@ -37,7 +40,7 @@ function AppRouter({ isWalletConnected = false }) {
                      <MainArea
                         child={
                            <>
-                              {isWalletConnected ? (
+                              {address ? (
                                  <GamePage />
                               ) : (
                                  <WalletNotConnectedPage />
@@ -57,7 +60,7 @@ function AppRouter({ isWalletConnected = false }) {
                      <MainArea
                         child={
                            <>
-                              {isWalletConnected ? (
+                              {address ? (
                                  <MintPage />
                               ) : (
                                  <WalletNotConnectedPage />

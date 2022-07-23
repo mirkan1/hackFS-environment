@@ -2,7 +2,7 @@
 // An example of a consumer contract that relies on a subscription for funding.
 pragma solidity ^0.8.7;
 
-// import "hardhat/console.sol";
+import "hardhat/console.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -108,24 +108,24 @@ contract WarGame is VRFConsumerBaseV2 {
 
     // Function adding values to the mapping
     function play(uint256 amount) public payable {
-        uint256 _bal = card3BalanceOf(msg.sender, CHIP);
-        require(_bal>=amount, "User does not have enough CHIP funds");
+        // requires at least 1 CHIP to play
+        require(card3BalanceOf(msg.sender, CHIP)>=amount, "User does not have enough CHIP funds");
         // need to whitelist me first or I need to override me as whitelist member?/?/?
         // _safeTransferFrom(msg.sender,
         // address to,
         // uint256 id,
         // uint256 amount,
         // bytes memory data)
-        // requestRandomWords();
-        // waitingApprovals[s_requestId] = gameCounter;
-        // games.push(game({
-        //     id:gameCounter,
-        //     playerCard:0,
-        //     houseCard:0,
-        //     player: msg.sender
-        // }));
-        // prevIds[msg.sender].push(gameCounter);
-        // gameCounter++;
+        requestRandomWords();
+        waitingApprovals[s_requestId] = gameCounter;
+        games.push(game({
+            id:gameCounter,
+            playerCard:0,
+            houseCard:0,
+            player: msg.sender
+        }));
+        prevIds[msg.sender].push(gameCounter);
+        gameCounter++;
     }
 
     function gamesLength() view public returns (uint256) {
@@ -183,4 +183,5 @@ interface Card3Storage {
         uint256 amount,
         bytes memory data
     ) external payable;
+    function isApprovedForAll(address account, address operator) external view returns (bool);
 }
